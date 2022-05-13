@@ -3,7 +3,6 @@ const theaterBtn = document.querySelector(".theater-btn")
 const fullScreenBtn = document.querySelector(".full-screen-btn")
 const miniPlayerBtn = document.querySelector(".mini-player-btn")
 const muteBtn = document.querySelector(".mute-btn")
-const captionsBtn = document.querySelector(".captions-btn")
 const speedBtn = document.querySelector(".speed-btn")
 const currentTimeElem = document.querySelector(".current-time")
 const totalTimeElem = document.querySelector(".total-time")
@@ -13,6 +12,11 @@ const volumeSlider = document.querySelector(".volume-slider")
 const videoContainer = document.querySelector(".video-container")
 const timelineContainer = document.querySelector(".timeline-container")
 const video = document.querySelector("video")
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+const videoURL = params.url;
+const videoTime = params.currentTime;
 
 document.addEventListener("keydown", e => {
   const tagName = document.activeElement.tagName.toLowerCase()
@@ -44,9 +48,6 @@ document.addEventListener("keydown", e => {
     case "arrowright":
     case "l":
       skip(5)
-      break
-    case "c":
-      toggleCaptions()
       break
   }
 })
@@ -82,17 +83,10 @@ function toggleScrubbing(e) {
 function handleTimelineUpdate(e) {
   const rect = timelineContainer.getBoundingClientRect()
   const percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width
-  const previewImgNumber = Math.max(
-    1,
-    Math.floor((percent * video.duration) / 10)
-  )
-  const previewImgSrc = `assets/previewImgs/preview${previewImgNumber}.jpg`
-  previewImg.src = previewImgSrc
   timelineContainer.style.setProperty("--preview-position", percent)
 
   if (isScrubbing) {
     e.preventDefault()
-    thumbnailImg.src = previewImgSrc
     timelineContainer.style.setProperty("--progress-position", percent)
   }
 }
@@ -105,18 +99,6 @@ function changePlaybackSpeed() {
   if (newPlaybackRate > 2) newPlaybackRate = 0.25
   video.playbackRate = newPlaybackRate
   speedBtn.textContent = `${newPlaybackRate}x`
-}
-
-// Captions
-const captions = video.textTracks[0]
-captions.mode = "hidden"
-
-captionsBtn.addEventListener("click", toggleCaptions)
-
-function toggleCaptions() {
-  const isHidden = captions.mode === "hidden"
-  captions.mode = isHidden ? "showing" : "hidden"
-  videoContainer.classList.toggle("captions", isHidden)
 }
 
 // Duration
@@ -228,3 +210,10 @@ video.addEventListener("play", () => {
 video.addEventListener("pause", () => {
   videoContainer.classList.add("paused")
 })
+
+// source
+window.addEventListener('load', (event) => {
+  video.src = videoURL;
+  video.currentTime = videoTime || 0;
+  console.log("Dai-ai is not associated with the video");
+});

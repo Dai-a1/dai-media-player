@@ -8,8 +8,8 @@ body {
 
 .video-container {
   position: relative;
-  width: 90%;
-  max-width: 1000px;
+  width: 100%;
+  max-width: 100%;
   display: flex;
   justify-content: center;
   margin-inline: auto;
@@ -31,7 +31,9 @@ body {
 }
 
 video {
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
+
 }
 
 .video-controls-container {
@@ -43,6 +45,7 @@ video {
   z-index: 100;
   opacity: 0;
   transition: opacity 150ms ease-in-out;
+
 }
 
 .video-controls-container::before {
@@ -154,7 +157,7 @@ video {
 }
 
 .video-container.captions .captions-btn {
-  border-bottom: 3px solid red;
+  border-bottom: 3px solid #5865f2;
 }
 
 .video-controls-container .controls button.wide-btn {
@@ -194,7 +197,7 @@ video {
   top: 0;
   bottom: 0;
   right: calc(100% - var(--progress-position) * 100%);
-  background-color: red;
+  background-color: #5865f2;
 }
 
 .timeline .thumb-indicator {
@@ -204,7 +207,7 @@ video {
   height: 200%;
   top: -50%;
   left: calc(var(--progress-position) * 100%);
-  background-color: red;
+  background-color: #5865f2;
   border-radius: 50%;
   transition: transform 150ms ease-in-out;
   aspect-ratio: 1 / 1;
@@ -256,3 +259,4 @@ video {
 .timeline-container:hover .timeline {
   height: 100%;
 }
+
